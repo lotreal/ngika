@@ -12,6 +12,10 @@ import (
 	"golang.org/x/net/context"
 )
 
+const (
+	NgPort = "80/tcp"
+)
+
 func main() {
 	ctx := context.Background()
 	cli, err := client.NewEnvClient()
@@ -31,7 +35,7 @@ func main() {
 				"/go/src/github.com/hg2c/example": {},
 			},
 			ExposedPorts: nat.PortSet{
-				"80/tcp": struct{}{},
+				NgPort: struct{}{},
 			},
 		},
 		&container.HostConfig{
@@ -39,10 +43,10 @@ func main() {
 				"/Volumes/Kayle/w/hg2c/golang:/go/src/github.com/hg2c/example:rw",
 			},
 			PortBindings: nat.PortMap{
-				"80/tcp": []nat.PortBinding{
+				NgPort: []nat.PortBinding{
 					{
 						HostIP:   "0.0.0.0",
-						HostPort: "80",
+						HostPort: "8008",
 					},
 				},
 			},
