@@ -1,0 +1,11 @@
+version: '2'
+services:
+  golang:
+    image: hg2c/golang:alpine
+    volumes:
+      - './:/go/src/github.com/lotreal/rewrite'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    working_dir: '/go/src/github.com/lotreal/rewrite'
+    entrypoint: /bin/bash
+    stdin_open: true
+    tty: true
