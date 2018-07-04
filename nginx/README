@@ -1,0 +1,31 @@
+规则联合
+
+    rewrite  ^/b/(.*)  /c/$1;
+    rewrite  ^/c/(.*)  /d/$1;
+    rewrite  ^/d/(.*)  http://www.dell.com/$1;
+
+
+http://www.dell.com/1
+
+nginx_1  | 2017/11/10 01:41:17 [notice] 50#50: *7 "^/b/(.*)" matches "/b/1", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+nginx_1  | 2017/11/10 01:41:17 [notice] 50#50: *7 rewritten data: "/c/1", args: "", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+nginx_1  | 2017/11/10 01:41:17 [notice] 50#50: *7 "^/c/(.*)" matches "/c/1", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+nginx_1  | 2017/11/10 01:41:17 [notice] 50#50: *7 rewritten data: "/d/1", args: "", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+nginx_1  | 2017/11/10 01:41:17 [notice] 50#50: *7 "^/d/(.*)" matches "/d/1", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+nginx_1  | 2017/11/10 01:41:17 [notice] 50#50: *7 rewritten redirect: "http://www.dell.com/1", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+
+
+
+顺序匹配
+
+    rewrite  ^/c/(.*)  /d/$1;
+    rewrite  ^/b/(.*)  /c/$1;
+    rewrite  ^/d/(.*)  http://www.dell.com/$1;
+
+
+
+nginx_1  | 2017/11/10 01:42:43 [notice] 57#57: *9 "^/c/(.*)" does not match "/b/1", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+nginx_1  | 2017/11/10 01:42:43 [notice] 57#57: *9 "^/b/(.*)" matches "/b/1", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+nginx_1  | 2017/11/10 01:42:43 [notice] 57#57: *9 rewritten data: "/c/1", args: "", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+nginx_1  | 2017/11/10 01:42:43 [notice] 57#57: *9 "^/d/(.*)" does not match "/c/1", client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"
+nginx_1  | 2017/11/10 01:42:43 [error] 57#57: *9 open() "/usr/share/nginx/html/c/1" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /b/1 HTTP/1.1", host: "127.0.0.1:32080"

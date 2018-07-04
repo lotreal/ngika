@@ -7,5 +7,5 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock'
     working_dir: '/go/src/github.com/lotreal/ngika'
     entrypoint: /bin/bash
-    stdin_open: true
+    # stdin_open: true
     tty: true
